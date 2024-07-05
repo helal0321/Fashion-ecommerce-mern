@@ -9,13 +9,6 @@ cloudinary.config({
   api_secret: process.env.API_SECRET
 });
 
-// const storage = new CloudinaryStorage({
-//     cloudinary,
-//     params: {
-//         folder: 'products_upload',
-//         allowedFormats: ['jpeg', 'png', 'jpg'],
-//     }                                                              
-// }); 
 const storage=multer.diskStorage({
   filename:function(req,file,cb){
     cb(null,file.originalname)
