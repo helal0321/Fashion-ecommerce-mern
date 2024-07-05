@@ -1,8 +1,8 @@
 const paypal=require("../config/paypal.config.js")
 paypal.configure({
     'mode': 'sandbox', //sandbox or live
-    'client_id': 'ARgmc9kTnfXQgQJB9pMRH51ZicX_OsTeblwESGdwbq3ME2eqSIXp-yi5QQ3772gWG-G9Z5WVDs_F8qXL',
-    'client_secret': 'EKOn6VupGTyp-zirRNj7Tc17RRx3Fn-MinDmJ6d9P_OAPAQlPSheNzCMuPRU90q_Zshns0f-lsGHho9I'
+    'client_id': process.env.CLIENT_ID,
+    'client_secret': process.env.CLIENT_SECRET
   });
   const pay=async(cartItems,paymentInfo)=>{
     const itemsData=cartItems.map((item)=>{
