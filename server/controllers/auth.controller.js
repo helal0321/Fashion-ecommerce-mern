@@ -13,7 +13,7 @@ const generateResetHtml=require("../utils/resetHtml.js")
     if(userFound){
         return next(Error(401,"email already exists"))
     }
-    const emailToken=await jwt.sign({email},"1234mm",{expiresIn: '10m'})
+    const emailToken=await jwt.sign({email},process.env.EMAIL_TOKEN_SECRET,{expiresIn: '10m'})
     await sendEmail(email,generateEmailHtml(emailToken),"verify email")
     const hashedPassword= await bcrypt.hash(password,10)
     const newUser = await User.create({
@@ -46,7 +46,7 @@ const login=async(req,res,next)=>{
     if(!checkPassword){
         return next(Error(401,"wrong password"))
     }
-    const token= await jwt.sign({userId:user._id,role:user.role},"1234mm")
+    const token= await jwt.sign({userId:user._id,role:user.role},process.env.USER_TOKEN_SECRET)
     delete user._doc.password
     console.log(token)
     
@@ -62,7 +62,7 @@ const verifyEmail=async(req,res,next)=>{
     
     try{
         const {token}=req.query
-        const verify= await jwt.verify(token,"1234mm")
+        const verify= await jwt.verify(token,process.env.EMAIL_TOKEN_SECRET)
 
         if(!verify){
             return next(Error(501,"invalid token"))
@@ -94,7 +94,7 @@ const forgotPassword=async(req,res,next)=>{
     if(!userFound){
         return next(Error(501,"user not found"))
     }
-    const resetToken=await jwt.sign({email},"1234mm",{expiresIn: '10m'})
+    const resetToken=await jwt.sign({email},process.env.RESET_TOKEN_SECRET,{expiresIn: '10m'})
     await sendEmail(email,generateResetHtml(resetToken),"reset password")
     res.status(200).json({status:"sucess",message:"email message has been sent sucessfully"})
 }
@@ -108,7 +108,7 @@ const resetPassword=async(req,res,next)=>{
     try{
     const {token}=req.query
     const {password}=req.body
-    const verify= await jwt.verify(token,"1234mm")
+    const verify= await jwt.verify(token,process.env.RESET_TOKEN_SECRET)
     if(!verify){
         return next(Error(501,"invalid token"))
     }
