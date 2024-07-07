@@ -4,7 +4,7 @@ const verifyToken=async(req,res,next)=>{
     try{
     const {authorization}=req.headers
    
-    const verify= await jwt.verify(authorization,"1234mm")
+    const verify= await jwt.verify(authorization,process.env.USER_TOKEN_SECRET)
     req.user=verify
 
     
